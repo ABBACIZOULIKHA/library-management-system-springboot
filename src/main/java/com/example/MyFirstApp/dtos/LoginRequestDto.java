@@ -1,10 +1,10 @@
 package com.example.MyFirstApp.dtos;
 
+
 import lombok.Data;
 
 @Data
-public class UpdateUserRequest {
-    private String fullName;
+public class LoginRequestDto {
     private String email;
-    private String status;
+    private String password;
 }

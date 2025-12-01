@@ -1,5 +1,6 @@
 package com.example.MyFirstApp.entities;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,20 +12,21 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "categories")
-public class Category {
+@Table(name = "authors")
+public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description")
-    private String description;
+    @Lob
+    @Column(name = "bio")
+    private String bio;
 
-    @OneToMany(mappedBy = "category")
+    @ManyToMany(mappedBy = "authors")
     private List<Book> books;
 }

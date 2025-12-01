@@ -1,71 +1,60 @@
 package com.example.MyFirstApp.entities;
 
+import com.example.MyFirstApp.entities.enums.Role;
+import com.example.MyFirstApp.entities.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
-
-@Setter
 @Getter
+@Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
-@ToString(exclude = "addresses")
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
 
-    @Column(name = "email")
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    @Builder.Default
-    private List<Address> addresses = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
-    public void addAddress(Address address) {
-        addresses.add(address);
-        address.setUser(this);
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void init() {
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (status == null) status = UserStatus.ACTIVE;
     }
 
-    public void removeAddress(Address address) {
-        addresses.remove(address);
-        address.setUser(null);
-    }
+    @OneToMany(mappedBy = "user")
+    private List<Loan> loans;
 
+    @OneToMany(mappedBy = "user")
+    private List<Reservation> reservations;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private Profile profile;
+    @OneToMany(mappedBy = "user")
+    private List<AuditLog> logs;
 
-    @ManyToMany
-    @JoinTable(
-            name = "wishlist",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private Set<Product> favoriteProducts = new HashSet<>();
-
-    public void addFavoriteProduct(Product product) {
-        favoriteProducts.add(product);
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "name = " + name + ", " +
-                "email = " + email + ")";
-    }
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews;
 }

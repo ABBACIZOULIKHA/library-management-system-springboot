@@ -3,7 +3,7 @@ spring:
     name: store
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/EcomerceDB
+    url: jdbc:postgresql://localhost:5432/LibraryDB
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
