@@ -8,8 +8,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
 
+//    @Mapping(target = "reservedAt", source = "reservationDate")
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "bookId", source = "book.id")
-    @Mapping(target = "status", source = "status")
     ReservationDto toDto(Reservation reservation);
 }
+
+
+

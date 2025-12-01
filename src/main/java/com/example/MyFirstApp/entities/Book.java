@@ -59,6 +59,6 @@ public class Book {
     @OneToMany(mappedBy = "book")
     private List<Reservation> reservations;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Review> reviews;
 }

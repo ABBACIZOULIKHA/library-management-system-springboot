@@ -65,4 +65,21 @@ public class BookController {
         bookRepository.delete(book);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/category/{id}")
+    public List<BookDto> byCategory(@PathVariable Long id) {
+        return bookRepository.findByCategoryId(id)
+                .stream()
+                .map(bookMapper::toDto)
+                .toList();
+    }
+
+    @GetMapping("/search")
+    public List<BookDto> search(@RequestParam String keyword) {
+        return bookRepository.findByTitleContainingIgnoreCase(keyword)
+                .stream()
+                .map(bookMapper::toDto)
+                .toList();
+    }
+
 }

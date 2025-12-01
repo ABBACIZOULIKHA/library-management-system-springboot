@@ -23,9 +23,9 @@ public class Author {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Lob
-    @Column(name = "bio")
+    @Column(name = "bio", columnDefinition = "TEXT")
     private String bio;
+
 
     @ManyToMany(mappedBy = "authors")
     private List<Book> books;

@@ -20,9 +20,9 @@ public class Review {
     @Column(name = "rating")
     private int rating;
 
-    @Lob
-    @Column(name = "comment")
+    @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")

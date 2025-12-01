@@ -21,7 +21,7 @@ public class Reservation {
     private Long id;
 
     @Column(name = "reservation_date")
-    private LocalDateTime reservationDate;
+    private LocalDateTime reservedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

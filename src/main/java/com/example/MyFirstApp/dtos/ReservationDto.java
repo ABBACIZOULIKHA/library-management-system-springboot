@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class ReservationDto {
 
     private Long id;
-    private LocalDateTime reservationDate;
+    private LocalDateTime reservedAt;
     private String status;
     private Long userId;
     private Long bookId;
