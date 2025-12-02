@@ -12,8 +12,12 @@ import com.example.MyFirstApp.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @AllArgsConstructor
@@ -81,5 +85,52 @@ public class BookController {
                 .map(bookMapper::toDto)
                 .toList();
     }
+
+//    CONTROLLER — ADD UPLOAD ENDPOINT
+    @PostMapping("/{id}/pdf")
+    public ResponseEntity<?> uploadPdf(@PathVariable Long id,
+                                       @RequestParam MultipartFile file) throws Exception {
+
+        Book book = bookRepository.findById(id).orElse(null);
+        if (book == null) return ResponseEntity.notFound().build();
+
+        if (!file.getContentType().equals("application/pdf"))
+            return ResponseEntity.badRequest().body("Only PDF allowed");
+
+        // directory
+        String uploadDir = "uploads/pdfs/";
+        Files.createDirectories(Paths.get(uploadDir));
+
+        String filename = id + "_" + file.getOriginalFilename();
+        Path path = Paths.get(uploadDir + filename);
+
+        Files.write(path, file.getBytes());
+
+        book.setPdfPath(path.toString());
+        bookRepository.save(book);
+
+        return ResponseEntity.ok("PDF uploaded successfully");
+    }
+
+//    ADD DOWNLOAD ENDPOINT
+
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<byte[]> getPdf(@PathVariable Long id) throws Exception {
+
+        Book book = bookRepository.findById(id).orElse(null);
+        if (book == null || book.getPdfPath() == null)
+            return ResponseEntity.notFound().build();
+
+        Path path = Paths.get(book.getPdfPath());
+
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=book.pdf")
+                .body(Files.readAllBytes(path));
+    }
+
+
+
+
 
 }

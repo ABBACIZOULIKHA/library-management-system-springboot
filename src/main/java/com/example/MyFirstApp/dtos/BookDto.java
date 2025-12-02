@@ -16,4 +16,6 @@ public class BookDto {
     private String shelfLocation;
     private Long categoryId;
     private List<Long> authorIds;
+    private String pdfUrl;   // exposed URL, not file path
+
 }

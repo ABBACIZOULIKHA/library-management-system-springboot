@@ -61,4 +61,7 @@ public class Book {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Review> reviews;
+
+    @Column(name = "pdf_path")
+    private String pdfPath;
 }
